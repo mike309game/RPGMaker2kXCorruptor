@@ -45,12 +45,21 @@ namespace RPGMaker2kXRandomizer
 
         public static void Main (string[] args)
         {
-            for (int i = 0; i < args.Length; i++)
+            /*for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].ToLower() == "-nopalette") ShufflePalettes = false;
                 if (args[i].ToLower() == "-name") ShuffleFilenames = true;
-            }
+            }*/
 
+            CMDStart:
+            Console.WriteLine("RPG Maker 200X randomizer by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!",ShufflePalettes.ToString(),ShuffleFilenames.ToString());
+            var key = Console.ReadKey();
+
+            if (key.Key == ConsoleKey.F1) { ShufflePalettes = !ShufflePalettes; Console.Clear(); goto CMDStart; }
+            if (key.Key == ConsoleKey.F2) { ShuffleFilenames = !ShuffleFilenames; Console.Clear(); goto CMDStart; }
+            if (key.Key == ConsoleKey.Enter) { Console.Clear(); goto Randomize; }
+
+            Randomize:
             if (Directory.Exists(CurrentPath + "Randomized\\"))
             {
                 foreach (var file in new DirectoryInfo(CurrentPath + "Randomized\\").GetFiles())
