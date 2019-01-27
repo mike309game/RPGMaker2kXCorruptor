@@ -126,7 +126,7 @@ namespace RPGMaker2kXRandomizer
                     {
                         images[j].Palette = palettes[j];
                         images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j]);
-                        //images[j].Dispose();
+                        images[j].Dispose();
                     }
                 }
             }
