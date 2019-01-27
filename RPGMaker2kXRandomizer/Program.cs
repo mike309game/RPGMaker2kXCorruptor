@@ -59,6 +59,9 @@ namespace RPGMaker2kXRandomizer
             if (key.Key == ConsoleKey.F2) { ShuffleFilenames = !ShuffleFilenames; Console.Clear(); goto CMDStart; }
             if (key.Key == ConsoleKey.Enter) { Console.Clear(); goto Randomize; }
 
+            Console.Clear();
+            goto CMDStart;
+
             Randomize:
             if (Directory.Exists(CurrentPath + "Randomized\\"))
             {
