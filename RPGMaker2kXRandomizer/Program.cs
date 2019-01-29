@@ -17,6 +17,8 @@ namespace RPGMaker2kXRandomizer
 { 
     public static class Program
     {
+        public static Random rng = new Random();
+
         public static IEnumerable<FileInfo> GetFilesByExtensions (this DirectoryInfo dir, params string[] extensions)
         {
             if (extensions == null)
@@ -31,7 +33,7 @@ namespace RPGMaker2kXRandomizer
             while (n > 1)
             {
                 n--;
-                int k = new Random().Next(n + 1);
+                int k = rng.Next(n + 1);
 
                 T value = list[k];
                 list[k] = list[n];
@@ -39,7 +41,7 @@ namespace RPGMaker2kXRandomizer
             }
         }
 
-        public static Image MyConvert(Bitmap oldbmp)
+        /*public static Image MyConvert(Bitmap oldbmp)
         {
             using (var ms = new MemoryStream())
             {
@@ -47,7 +49,7 @@ namespace RPGMaker2kXRandomizer
                 ms.Position = 0;
                 return Image.FromStream(ms);
             }
-        }
+        }*/
 
         static string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
         static bool ShufflePalettes = true;
@@ -80,6 +82,11 @@ namespace RPGMaker2kXRandomizer
                 if (args[i].ToLower() == "-nopalette") ShufflePalettes = false;
                 if (args[i].ToLower() == "-name") ShuffleFilenames = true;
             }*/
+
+            Console.WriteLine("RNG: (only numbers please)");
+
+            var k = Console.Read();
+            rng = new Random(Convert.ToInt32(k));
 
             CMDStart:
             Console.WriteLine("RPG Maker 200X randomizer by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options",ShufflePalettes.ToString(),ShuffleFilenames.ToString());
