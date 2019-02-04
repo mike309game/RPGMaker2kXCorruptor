@@ -54,6 +54,7 @@ namespace RPGMaker2kXRandomizer
         static string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
         static bool ShufflePalettes = true;
         static bool ShuffleFilenames = false;
+        static bool ShuffleOnlyFilenames = false;
 
         static bool DoBackdrop = true;
         static bool DoBattle = true;
@@ -89,7 +90,7 @@ namespace RPGMaker2kXRandomizer
             rng = new Random(Convert.ToInt32(k));
 
             CMDStart:
-            Console.WriteLine("RPG Maker 200X randomizer by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options",ShufflePalettes.ToString(),ShuffleFilenames.ToString());
+            Console.WriteLine("RPG Maker 200X randomizer by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
             var key = Console.ReadKey();
 
             switch (key.Key)
@@ -101,11 +102,13 @@ namespace RPGMaker2kXRandomizer
 
                 case ConsoleKey.F1:
                     ShufflePalettes = !ShufflePalettes;
+                    ShuffleOnlyFilenames = false;
                     goto default;
                     break;
 
                 case ConsoleKey.F2:
                     ShuffleFilenames = !ShuffleFilenames;
+                    ShuffleOnlyFilenames = false;
                     goto default;
                     break;
 
@@ -117,6 +120,13 @@ namespace RPGMaker2kXRandomizer
                 case ConsoleKey.F3:
                     Console.Clear();
                     goto Option;
+                    break;
+
+                case ConsoleKey.F4:
+                    ShufflePalettes = false;
+                    ShuffleFilenames = false;
+                    ShuffleOnlyFilenames =! ShuffleOnlyFilenames;
+                    goto default;
                     break;
             }
 
@@ -342,50 +352,72 @@ namespace RPGMaker2kXRandomizer
                     try
                     {
                         Directory.CreateDirectory(CurrentPath + "Randomized\\" + folder[i]);
-                        List<string> files = new List<string>();
-                        List<Image> images = new List<Image>();
-                        List<ColorPalette> palettes = new List<ColorPalette>();
-
-                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".bmp", ".gif"))
+                        if (ShuffleOnlyFilenames)
                         {
-                            files.Add(file.Name);
-                            images.Add(new Bitmap(file.FullName));
-                        }
-                        Console.WriteLine(folder[i] + " - Images added");
+                            List<string> filenames = new List<string>();
 
-                        if (ShufflePalettes)
-                        {
-                            foreach (var img in images)
+                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
                             {
-                                palettes.Add(img.Palette);
+                                filenames.Add(file.Name);
+                                //files.Add(File.ReadAllBytes(file.FullName));
                             }
 
-                            Console.WriteLine(folder[i] + " - Palettes added");
-                        }
+                            filenames.Shuffle();
 
-                        if (ShuffleFilenames)
-                        {
-                            files.Shuffle();
-                            Console.WriteLine(folder[i] + " - File names shuffled");
+                            int j = 0;
+                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
+                            {
+                                File.WriteAllBytes(CurrentPath + "Randomized\\" + folder[i] + "\\" + filenames[j], File.ReadAllBytes(file.FullName));
+                                j++;
+                            }
                         }
-                        if (ShufflePalettes)
+                        else
                         {
-                            palettes.Shuffle();
-                            Console.WriteLine(folder[i] + " - Palettes shuffled");
-                        }
+                            List<string> files = new List<string>();
+                            List<Image> images = new List<Image>();
+                            List<ColorPalette> palettes = new List<ColorPalette>();
 
-                        for (int j = 0; j < files.Count; j++)
-                        {
-                            if (ShufflePalettes) { images[j].Palette = palettes[j]; }
-                            if (files[j].Contains(".png"))
+                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".bmp", ".gif"))
                             {
-                                images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Png);
+                                files.Add(file.Name);
+                                images.Add(new Bitmap(file.FullName));
                             }
-                            else
+                            Console.WriteLine(folder[i] + " - Images added");
+
+                            if (ShufflePalettes)
                             {
-                                images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Bmp);
+                                foreach (var img in images)
+                                {
+                                    palettes.Add(img.Palette);
+                                }
+
+                                Console.WriteLine(folder[i] + " - Palettes added");
                             }
-                            images[j].Dispose();
+
+                            if (ShuffleFilenames)
+                            {
+                                files.Shuffle();
+                                Console.WriteLine(folder[i] + " - File names shuffled");
+                            }
+                            if (ShufflePalettes)
+                            {
+                                palettes.Shuffle();
+                                Console.WriteLine(folder[i] + " - Palettes shuffled");
+                            }
+
+                            for (int j = 0; j < files.Count; j++)
+                            {
+                                if (ShufflePalettes) { images[j].Palette = palettes[j]; }
+                                if (files[j].Contains(".png"))
+                                {
+                                    images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Png);
+                                }
+                                else
+                                {
+                                    images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Bmp);
+                                }
+                                images[j].Dispose();
+                            }
                         }
                     }
                     catch (IOException e)
@@ -394,7 +426,9 @@ namespace RPGMaker2kXRandomizer
                         continue;
                     }
                 }
-            }
+            } goto End;
+
+            End:
             Console.WriteLine("Done!");
             Console.ReadKey();
         }
