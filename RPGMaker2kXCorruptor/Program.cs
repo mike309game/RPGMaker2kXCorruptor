@@ -13,7 +13,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
 
-namespace RPGMaker2kXRandomizer
+namespace RPGMaker2kXCorruptor
 { 
     public static class Program
     {
@@ -90,7 +90,7 @@ namespace RPGMaker2kXRandomizer
             rng = new Random(Convert.ToInt32(k));
 
             CMDStart:
-            Console.WriteLine("RPG Maker 200X randomizer by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
+            Console.WriteLine("RPG Maker 200X corruptor by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
             var key = Console.ReadKey();
 
             switch (key.Key)
@@ -245,13 +245,13 @@ namespace RPGMaker2kXRandomizer
 
             Randomize:
             string[] folder = new string[19];
-            if (Directory.Exists(CurrentPath + "Randomized\\"))
+            if (Directory.Exists(CurrentPath + "Corrupted\\"))
             {
-                foreach (var file in new DirectoryInfo(CurrentPath + "Randomized\\").GetFiles())
+                foreach (var file in new DirectoryInfo(CurrentPath + "Corrupted\\").GetFiles())
                 {
                     file.Delete();
                 }
-                foreach (var dir in new DirectoryInfo(CurrentPath + "Randomized\\").GetDirectories())
+                foreach (var dir in new DirectoryInfo(CurrentPath + "Corrupted\\").GetDirectories())
                 {
                     dir.Delete(true);
                 }
@@ -351,7 +351,7 @@ namespace RPGMaker2kXRandomizer
                 {
                     try
                     {
-                        Directory.CreateDirectory(CurrentPath + "Randomized\\" + folder[i]);
+                        Directory.CreateDirectory(CurrentPath + "Corrupted\\" + folder[i]);
                         if (ShuffleOnlyFilenames)
                         {
                             List<string> filenames = new List<string>();
@@ -367,7 +367,7 @@ namespace RPGMaker2kXRandomizer
                             int j = 0;
                             foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
                             {
-                                File.WriteAllBytes(CurrentPath + "Randomized\\" + folder[i] + "\\" + filenames[j], File.ReadAllBytes(file.FullName));
+                                File.WriteAllBytes(CurrentPath + "Corrupted\\" + folder[i] + "\\" + filenames[j], File.ReadAllBytes(file.FullName));
                                 j++;
                             }
                         }

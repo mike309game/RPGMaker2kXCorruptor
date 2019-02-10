@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGMaker2kXRandomizer", "RPGMaker2kXRandomizer\RPGMaker2kXRandomizer.csproj", "{773A3FF0-D835-47AC-BA2C-67102D7A610D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGMaker2kXCorruptor", "RPGMaker2kXCorruptor\RPGMaker2kXCorruptor.csproj", "{773A3FF0-D835-47AC-BA2C-67102D7A610D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
