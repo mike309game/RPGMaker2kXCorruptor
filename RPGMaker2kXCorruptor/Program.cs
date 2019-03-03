@@ -51,7 +51,7 @@ namespace RPGMaker2kXCorruptor
             }
         }*/
 
-        static string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
+        static readonly string CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
         static bool ShufflePalettes = true;
         static bool ShuffleFilenames = false;
         static bool ShuffleOnlyFilenames = false;
@@ -88,9 +88,10 @@ namespace RPGMaker2kXCorruptor
 
             var k = Console.Read();
             rng = new Random(Convert.ToInt32(k));
+            Console.Clear();
 
             CMDStart:
-            Console.WriteLine("RPG Maker 200X corruptor by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
+            Console.WriteLine("RPG Maker 200X corruptor v2.1.0.3 by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
             var key = Console.ReadKey();
 
             switch (key.Key)
@@ -349,81 +350,73 @@ namespace RPGMaker2kXCorruptor
                 }
                 else
                 {
-                    try
+                    Directory.CreateDirectory(CurrentPath + "Corrupted\\" + folder[i]);
+                    if (ShuffleOnlyFilenames)
                     {
-                        Directory.CreateDirectory(CurrentPath + "Corrupted\\" + folder[i]);
-                        if (ShuffleOnlyFilenames)
+                        List<string> filenames = new List<string>();
+
+                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
                         {
-                            List<string> filenames = new List<string>();
-
-                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
-                            {
-                                filenames.Add(file.Name);
-                                //files.Add(File.ReadAllBytes(file.FullName));
-                            }
-
-                            filenames.Shuffle();
-
-                            int j = 0;
-                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
-                            {
-                                File.WriteAllBytes(CurrentPath + "Corrupted\\" + folder[i] + "\\" + filenames[j], File.ReadAllBytes(file.FullName));
-                                j++;
-                            }
+                            filenames.Add(file.Name);
+                            //files.Add(File.ReadAllBytes(file.FullName));
                         }
-                        else
+
+                        filenames.Shuffle();
+
+                        int j = 0;
+                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFiles())
                         {
-                            List<string> files = new List<string>();
-                            List<Image> images = new List<Image>();
-                            List<ColorPalette> palettes = new List<ColorPalette>();
-
-                            foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".bmp", ".gif"))
-                            {
-                                files.Add(file.Name);
-                                images.Add(new Bitmap(file.FullName));
-                            }
-                            Console.WriteLine(folder[i] + " - Images added");
-
-                            if (ShufflePalettes)
-                            {
-                                foreach (var img in images)
-                                {
-                                    palettes.Add(img.Palette);
-                                }
-
-                                Console.WriteLine(folder[i] + " - Palettes added");
-                            }
-
-                            if (ShuffleFilenames)
-                            {
-                                files.Shuffle();
-                                Console.WriteLine(folder[i] + " - File names shuffled");
-                            }
-                            if (ShufflePalettes)
-                            {
-                                palettes.Shuffle();
-                                Console.WriteLine(folder[i] + " - Palettes shuffled");
-                            }
-
-                            for (int j = 0; j < files.Count; j++)
-                            {
-                                if (ShufflePalettes) { images[j].Palette = palettes[j]; }
-                                if (files[j].Contains(".png"))
-                                {
-                                    images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Png);
-                                }
-                                else
-                                {
-                                    images[j].Save(CurrentPath + "Randomized\\" + folder[i] + "\\" + files[j], ImageFormat.Bmp);
-                                }
-                                images[j].Dispose();
-                            }
+                            File.WriteAllBytes(CurrentPath + "Corrupted\\" + folder[i] + "\\" + filenames[j], File.ReadAllBytes(file.FullName));
+                            j++;
                         }
                     }
-                    catch (IOException e)
+                    else
                     {
-                        Console.WriteLine("An error occured={0}",e.ToString());
-                        continue;
+                        List<string> files = new List<string>();
+                        List<Image> images = new List<Image>();
+                        List<ColorPalette> palettes = new List<ColorPalette>();
+
+                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".bmp", ".gif"))
+                        {
+                            files.Add(file.Name);
+                            images.Add(new Bitmap(file.FullName));
+                        }
+
+                        Console.WriteLine(folder[i] + " - Images added");
+                        if (ShufflePalettes)
+                        {
+                            foreach (var img in images)
+                            {
+                                palettes.Add(img.Palette);
+                            }
+
+                            Console.WriteLine(folder[i] + " - Palettes added");
+                        }
+
+                        if (ShuffleFilenames)
+                        {
+                            files.Shuffle();
+                            Console.WriteLine(folder[i] + " - File names shuffled");
+                        }
+                        if (ShufflePalettes)
+                        {
+                            palettes.Shuffle();
+                            Console.WriteLine(folder[i] + " - Palettes shuffled");
+                        }
+
+                        for (int j = 0; j < files.Count; j++)
+                        {
+                            if (ShufflePalettes) { images[j].Palette = palettes[j]; }
+                            if (files[j].Contains(".png"))
+                            {
+                                images[j].Save(CurrentPath + "Corrupted\\" + folder[i] + "\\" + files[j], ImageFormat.Png);
+                            }
+                            else
+                            {
+                                images[j].Save(CurrentPath + "Corrupted\\" + folder[i] + "\\" + files[j], ImageFormat.Bmp);
+                            }
+                            images[j].Dispose();
+                        }
                     }
                 }
             } goto End;
