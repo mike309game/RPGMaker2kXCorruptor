@@ -1,20 +1,31 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPGMaker2kXCorruptor", "RPGMaker2kXCorruptor\RPGMaker2kXCorruptor.csproj", "{773A3FF0-D835-47AC-BA2C-67102D7A610D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Debug|x64.ActiveCfg = Debug|x64
+		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Debug|x64.Build.0 = Debug|x64
 		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Debug|x86.ActiveCfg = Debug|x86
 		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Debug|x86.Build.0 = Debug|x86
+		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Release|x64.ActiveCfg = Release|x64
+		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Release|x64.Build.0 = Release|x64
 		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Release|x86.ActiveCfg = Release|x86
 		{773A3FF0-D835-47AC-BA2C-67102D7A610D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5713035B-6FAE-4FCC-8575-20E661A2BFC7}
 	EndGlobalSection
 EndGlobal

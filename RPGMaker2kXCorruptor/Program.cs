@@ -76,6 +76,9 @@ namespace RPGMaker2kXCorruptor
         static bool DoSystemTwo = true;
         static bool DoTitle = true;
 
+        //test
+        static bool Verbosity = false;
+
         public static void Main (string[] args)
         {
             /*for (int i = 0; i < args.Length; i++)
@@ -91,7 +94,7 @@ namespace RPGMaker2kXCorruptor
             Console.Clear();
 
             CMDStart:
-            Console.WriteLine("RPG Maker 200X corruptor v2.1.0.3 by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
+            Console.WriteLine("RPG Maker 200X corruptor v2.1.0.4 by mike309\nPress F1 to toggle palette randomization (currently {0})\nPress F2 to toggle file name randomization (currently {1})\nPress Enter to corrupt!\nPress F3 for more options\nPress F4 to shuffle only filenames (currently {2})",ShufflePalettes.ToString(),ShuffleFilenames.ToString(),ShuffleOnlyFilenames.ToString());
             var key = Console.ReadKey();
 
             switch (key.Key)
@@ -133,7 +136,7 @@ namespace RPGMaker2kXCorruptor
 
             Option:
             Console.Clear();
-            Console.WriteLine(" F1 = Backdrop {0}\n F2 = Battle {1}\n F3 = Battle2 {2}\n F4 = BattleCharSet {3}\n F5 = BattleWeapon {4}\n F6 = CharSet {5}\n F7 = ChipSet {6}\n F8 = FaceSet {7}\n F9 = Frame {8}\n F10 = GameOver {9}\n F11 = Monster {10}\n F12 = Movie {11}\n 1 = Music {12}\n 2 = Panorama {13}\n 3 = Picture {14}\n 4 = Sound {15}\n 5 = System {16}\n 6 = System2 {17}\n 7 = Title {18}\n Press Enter to go back",DoBackdrop.ToString(),DoBattle.ToString(),DoBattleTwo.ToString(),DoBattleCharSet.ToString(),DoBattleWeapon.ToString(),DoCharSet.ToString(),DoChipSet.ToString(),DoFaceSet.ToString(),DoFrame.ToString(),DoGameOver.ToString(),DoMonster.ToString(),DoMovie.ToString(),DoMusic.ToString(),DoPanorama.ToString(),DoPicture.ToString(),DoSound.ToString(),DoSystem.ToString(),DoSystemTwo.ToString(),DoTitle.ToString());
+            Console.WriteLine(" F1 = Backdrop {0}\n F2 = Battle {1}\n F3 = Battle2 {2}\n F4 = BattleCharSet {3}\n F5 = BattleWeapon {4}\n F6 = CharSet {5}\n F7 = ChipSet {6}\n F8 = FaceSet {7}\n F9 = Frame {8}\n F10 = GameOver {9}\n F11 = Monster {10}\n F12 = Movie {11}\n 1 = Music {12}\n 2 = Panorama {13}\n 3 = Picture {14}\n 4 = Sound {15}\n 5 = System {16}\n 6 = System2 {17}\n 7 = Title {18}\n 8 = Verbosity {19}\n Press Enter to go back",DoBackdrop.ToString(),DoBattle.ToString(),DoBattleTwo.ToString(),DoBattleCharSet.ToString(),DoBattleWeapon.ToString(),DoCharSet.ToString(),DoChipSet.ToString(),DoFaceSet.ToString(),DoFrame.ToString(),DoGameOver.ToString(),DoMonster.ToString(),DoMovie.ToString(),DoMusic.ToString(),DoPanorama.ToString(),DoPicture.ToString(),DoSound.ToString(),DoSystem.ToString(),DoSystemTwo.ToString(),DoTitle.ToString(),Verbosity);
             var keyt = Console.ReadKey();
 
             switch (keyt.Key)
@@ -240,6 +243,11 @@ namespace RPGMaker2kXCorruptor
 
                 case ConsoleKey.D7:
                     DoTitle = !DoTitle;
+                    goto default;
+                    break;
+
+                case ConsoleKey.D8:
+                    Verbosity = !Verbosity;
                     goto default;
                     break;
             }
@@ -376,18 +384,27 @@ namespace RPGMaker2kXCorruptor
                         List<Image> images = new List<Image>();
                         List<ColorPalette> palettes = new List<ColorPalette>();
 
-                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".bmp", ".gif"))
+                        foreach (var file in new DirectoryInfo(CurrentPath + folder[i]).GetFilesByExtensions(".png", ".PNG", ".bmp", ".gif"))
                         {
+                            if(Verbosity) { Console.WriteLine("About to add '{0}' to 'files'",file.Name); }
                             files.Add(file.Name);
+                            if (Verbosity) { Console.WriteLine("Added '{0}' to 'files'", file.Name); }
+
+                            if (Verbosity) { Console.WriteLine("About to add '{0}' to 'images'", file.Name); }
                             images.Add(new Bitmap(file.FullName));
+                            if (Verbosity) { Console.WriteLine("Added '{0}' to 'images'", file.Name); }
                         }
 
-                        Console.WriteLine(folder[i] + " - Images added");
-                        if (ShufflePalettes)
+                        Console.WriteLine(folder[i] + " - All images added");
+                        if (true)
                         {
+                            int j = 0;
                             foreach (var img in images)
                             {
+                                if (Verbosity) { Console.WriteLine("About to add '{0}' to 'palettes'", files[j]); }
                                 palettes.Add(img.Palette);
+                                if (Verbosity) { Console.WriteLine("Added '{0}' to 'palettes'", files[j]); }
+                                j++;
                             }
 
                             Console.WriteLine(folder[i] + " - Palettes added");
@@ -406,14 +423,23 @@ namespace RPGMaker2kXCorruptor
 
                         for (int j = 0; j < files.Count; j++)
                         {
-                            if (ShufflePalettes) { images[j].Palette = palettes[j]; }
+                            if (true) {
+                                if(Verbosity) { Console.WriteLine("About to set '{0}' palette to a random one", files[j]); }
+                                images[j].Palette = palettes[j];
+                                if(Verbosity) { Console.WriteLine("Set '{0}' palette to a random one", files[j]); }
+                            }
+
                             if (files[j].Contains(".png"))
                             {
+                                Console.WriteLine("About to save '{0}' to '{1}'",files[j],folder[i]);
                                 images[j].Save(CurrentPath + "Corrupted\\" + folder[i] + "\\" + files[j], ImageFormat.Png);
+                                Console.WriteLine("Saved '{0}' to '{1}'", files[j], folder[i]);
                             }
                             else
                             {
+                                Console.WriteLine("About to save '{0}' to '{1}'", files[j], folder[i]);
                                 images[j].Save(CurrentPath + "Corrupted\\" + folder[i] + "\\" + files[j], ImageFormat.Bmp);
+                                Console.WriteLine("Saved '{0}' to '{1}'", files[j], folder[i]);
                             }
                             images[j].Dispose();
                         }
